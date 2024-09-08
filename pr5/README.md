@@ -1,5 +1,62 @@
 # Minikube
 
+## Инструкция для быстрого воспроизведения:
+
+```sh
+k apply -f $HOME/manifests/deployment.yaml
+```
+
+expose:
+```sh
+k expose po js-server-danila-bratushka-ikbo-24-21-5b59978876-zn25l --target-port 8080
+k get svc
+
+minikube service "<svc>"
+```
+
+Дашборд:
+```sh
+minikube dashboard
+# проброска портов
+ssh -i .vagrant/machines/default/vmware_desktop/private_key -L 10100:localhost:41421  vagrant@192.168.31.102
+echo "http://127.0.0.1:10100/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/"
+```
+
+
+## Misc
+
+stop vm:
+```sh
+vagrant halt
+```
+
+Connect to VM:
+```sh
+ssh -i .vagrant/machines/default/vmware_desktop/private_key vagrant@192.168.31.102
+```
+
+rsync loop:
+```sh
+while true; do rsync -avz -e "ssh -i .vagrant/machines/default/vmware_desktop/private_key" ./manifests vagrant@192.168.31.102:/home/vagrant && sleep 1.0; done
+```
+
+before building image - sync server/Dockerfile files:
+```sh
+while true; do rsync -avz -e "ssh -i .vagrant/machines/default/vmware_desktop/private_key" ./server vagrant@192.168.31.102:/home/vagrant && sleep 1.0; done
+```
+
+minikube with docker images (it works!):
+```sh
+eval $(minikube docker-env)
+```
+
+build image:
+```sh
+docker build . -t js-server:0.0.1
+```
+
+TODO: https://stackoverflow.com/questions/30075461/how-do-i-add-my-own-public-key-to-vagrant-vm
+
 **NOTE: try `--mode=docker` next time**
 
 ## Install deps
@@ -105,6 +162,6 @@ sudo mkdir -p /etc/cni/net.d
 ## Start with no driver
 
 ```sh
-minikube start --vm-driver=none
+minikube start --vm-driver=docker
 ```
 

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: js-server-danila-bratushka-ikbo-24-21
+  labels:
+    app: js-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: js-server
+  template:
+    metadata:
+      labels:
+        app: js-server
+    spec:
+      containers:
+      - name: js-server
+        image: js-server:0.0.1
+        ports:
+          - containerPort: 80
+        imagePullPolicy: Never
+
