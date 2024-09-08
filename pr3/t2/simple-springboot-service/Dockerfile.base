@@ -1,0 +1,30 @@
+FROM debian:stable-slim AS wget
+
+RUN apt-get update && apt-get install -y wget && \
+    wget -O /MIREA_Gerb_Colour.png "https://www.mirea.ru/upload/medialibrary/80f/MIREA_Gerb_Colour.png"
+
+FROM maven:3.8.4-openjdk-17 AS builder
+
+WORKDIR /app
+
+COPY . /app
+
+COPY --from=wget /MIREA_Gerb_Colour.png ./static/MIREA_Gerb_Colour.png
+
+# RUN mvn dependency:go-offline && mvn package -DskipTests
+RUN mvn compile && mvn package 
+
+FROM openjdk:17-ea-30-jdk-slim
+
+LABEL student.name="Данила Братушка"
+LABEL student.group="ИКБО-24-21"
+
+WORKDIR /app
+
+COPY --from=builder /app/target/*.jar app.jar
+
+ONBUILD RUN echo "Сборка и запуск произведены. Автор: Данила Братушка"
+
+ENV DB_PORT=5432
+
+EXPOSE 8080
