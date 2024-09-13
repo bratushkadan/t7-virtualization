@@ -22,6 +22,15 @@ ssh -i .vagrant/machines/default/vmware_desktop/private_key -L 10100:localhost:4
 echo "http://127.0.0.1:10100/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/"
 ```
 
+ПР6 - ingress в браузере:
+```sh
+minikube dashboard
+# проброска портов
+ssh -i .vagrant/machines/default/vmware_desktop/private_key -L 10101:192.168.49.2:80  vagrant@192.168.31.102
+echo "http://127.0.0.1:10100/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/"
+```
+
+
 
 ## Misc
 
